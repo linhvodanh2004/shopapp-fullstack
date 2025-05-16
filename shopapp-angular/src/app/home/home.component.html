@@ -1,21 +1,80 @@
-<p>home works!</p>
-<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-    <h1 class="text-2xl font-bold mb-4 text-center text-blue-600">Employee Manager</h1>
+<!-- Header -->
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <a href="/" class="flex items-center space-x-2">
+            <img src="icons8-logo.svg" alt="MyShop Logo" class="h-10 w-10">
+            <span class="text-2xl font-bold text-black-600">PixelStore</span>
+        </a>
+        <nav class="space-x-6">
+            <a href="#" class="text-gray-600 hover:text-black-500">Home</a>
+            <a href="#" class="text-gray-600 hover:text-black-500">Shop</a>
+            <a href="#" class="text-gray-600 hover:text-black-500">About</a>
+            <a href="#" class="text-gray-600 hover:text-black-500">Contact</a>
+        </nav>
+        <div>
+            <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Cart (0)
+            </button>
+        </div>
+    </div>
+</header>
 
-    <form class="grid grid-cols-1 gap-4 mb-6">
-        <input type="text" name="name" placeholder="Name" class="border p-2 rounded" required />
-        <input type="text" name="position" placeholder="Position" class="border p-2 rounded" required />
-        <input type="text" name="department" placeholder="Department" class="border p-2 rounded" required />
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Add Employee</button>
-    </form>
+<img src="carousel-1.jpg" alt="Banner" class="w-full h-150 object-cover">
 
-    <ul>
-        <li class="flex justify-between items-center border-b py-2">
-            <div>
-                <p class="font-semibold">Linh</p>
-                <p class="text-sm text-gray-600">JAVA DEV</p>
+<!-- Featured Products -->
+<section class="py-12">
+    <div class="max-w-7xl mx-auto px-4">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Featured Products</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+            <!-- Product Card -->
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+                <img src="https://via.placeholder.com/300x200" alt="Product" class="rounded mb-4">
+                <h4 class="text-lg font-semibold text-gray-800">Wireless Headphones</h4>
+                <p class="text-black-600 font-bold mt-2">$99.99</p>
+                <button class="mt-4 w-full bg-black-600 text-white py-2 rounded hover:bg-black-700">
+                    Add to Cart
+                </button>
             </div>
-            <button class="text-red-500 hover:text-red-700">Delete</button>
-        </li>
-    </ul>
-</div>
+
+            <!-- Repeat Product Cards -->
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+                <img src="https://via.placeholder.com/300x200" alt="Product" class="rounded mb-4">
+                <h4 class="text-lg font-semibold text-gray-800">Smart Watch</h4>
+                <p class="text-black-600 font-bold mt-2">$149.99</p>
+                <button class="mt-4 w-full bg-black-600 text-white py-2 rounded hover:bg-black-700">
+                    Add to Cart
+                </button>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+                <img src="https://via.placeholder.com/300x200" alt="Product" class="rounded mb-4">
+                <h4 class="text-lg font-semibold text-gray-800">Gaming Mouse</h4>
+                <p class="text-black-600 font-bold mt-2">$59.99</p>
+                <button class="mt-4 w-full bg-black-600 text-white py-2 rounded hover:bg-black-700">
+                    Add to Cart
+                </button>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+                <img src="https://via.placeholder.com/300x200" alt="Product" class="rounded mb-4">
+                <h4 class="text-lg font-semibold text-gray-800">Mechanical Keyboard</h4>
+                <p class="text-black-600 font-bold mt-2">$129.99</p>
+                <button class="mt-4 w-full bg-black-600 text-white py-2 rounded hover:bg-black-700">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white border-t py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center text-sm text-gray-600">
+        <p>&copy; 2025 MyShop. All rights reserved.</p>
+        <div class="space-x-4">
+            <a href="#" class="hover:text-black-500">Privacy Policy</a>
+            <a href="#" class="hover:text-black-500">Terms</a>
+        </div>
+    </div>
+</footer>
