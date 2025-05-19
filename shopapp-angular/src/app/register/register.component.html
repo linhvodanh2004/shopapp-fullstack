@@ -2,22 +2,21 @@
 
 <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
+        <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
+            Create account
         </h2>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form class="space-y-6">
+            <form class="space-y-6" #registerForm="ngForm">
                 <!-- Full Name Input -->
                 <div>
                     <label for="fullname" class="block text-sm font-medium text-gray-700">
                         Full Name
                     </label>
                     <div class="mt-1">
-                        <input id="fullname" name="fullname" type="text" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                        <input id="fullname" name="fullName" type="text" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                             focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             placeholder="Enter your full name" [(ngModel)]="fullName">
                     </div>
@@ -29,10 +28,14 @@
                         Phone Number
                     </label>
                     <div class="mt-1">
-                        <input id="phone" name="phone" type="tel" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                        <input id="phone" name="phone" type="tel" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                             focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            (focus)="registerForm.controls['phone'].markAsTouched()"
                             placeholder="Enter your phone number" [(ngModel)]="phone" (input)="onPhoneNumberChange()">
+                        <p class="mt-2 text-sm text-red-500 italic" *ngIf="!phonePattern.test(phone)
+                             && registerForm.controls['phone'].touched">
+                            Invalid phone number format.
+                        </p>
                     </div>
                 </div>
 
@@ -42,8 +45,7 @@
                         Address
                     </label>
                     <div class="mt-1">
-                        <textarea id="address" name="address" rows="3"
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                        <textarea id="address" name="address" rows="3" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                             focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             placeholder="Enter your address" [(ngModel)]="address"></textarea>
                     </div>
@@ -51,14 +53,19 @@
 
                 <!-- Date of Birth Input -->
                 <div>
-                    <label for="dateofbirth" class="block text-sm font-medium text-gray-700">
+                    <label for="dateOfBirth" class="block text-sm font-medium text-gray-700">
                         Date of Birth
                     </label>
                     <div class="mt-1">
-                        <input id="dateofbirth" name="dateofbirth" type="date" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                        <input id="dateOfBirth" name="dateOfBirth" type="date" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                             focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Enter your date of birth" [(ngModel)]="dateOfBirth" >
+                            placeholder="Enter your date of birth" [(ngModel)]="dateOfBirthString"
+                            (focus)="registerForm.controls['dateOfBirth'].markAsTouched()" (input)="validateDate()">
+                        <p class="mt-2 text-sm text-red-500 italic" 
+                        *ngIf="registerForm.controls['dateOfBirth'].hasError('invalidDate')
+                        && registerForm.controls['dateOfBirth'].touched">
+                            Invalid date of birth.
+                        </p>
                     </div>
                 </div>
 
@@ -68,10 +75,14 @@
                         Password
                     </label>
                     <div class="mt-1">
-                        <input id="password" name="password" type="password" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                        <input id="password" name="password" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                             focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Enter your password" [(ngModel)]="password">
+                            placeholder="Enter your password" [(ngModel)]="password"
+                            (focus)="registerForm.controls['password'].markAsTouched()">
+                        <p class="mt-2 text-sm text-red-500 italic"
+                            *ngIf="(password.length < 6 || password.includes(' ')) && registerForm.controls['password'].touched">
+                            Password must be at least 6 characters without whitespace.
+                        </p>
                     </div>
                 </div>
 
@@ -81,18 +92,24 @@
                         Confirm Password
                     </label>
                     <div class="mt-1">
-                        <input id="confirm-password" name="confirm-password" type="password" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                        <input id="retypePassword" name="retypePassword" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                             focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Confirm your password" [(ngModel)]="retypePassword">
+                            placeholder="Confirm your password" [(ngModel)]="retypePassword"
+                            (focus)="registerForm.controls['retypePassword'].markAsTouched()"
+                            (input)="validatePassword()">
+                        <p class="mt-2 text-sm text-red-500 italic"
+                            *ngIf="registerForm.controls['retypePassword'].hasError('mismatch') && registerForm.controls['retypePassword'].touched">
+                            Password does not match.
+                        </p>
                     </div>
                 </div>
 
                 <!-- Terms and Conditions -->
                 <div class="flex items-center">
-                    <input id="terms" name="terms" type="checkbox" required
-                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label for="terms" class="ml-2 block text-sm text-gray-900">
+                    <input id="isAccepted" name="isAccepted" type="checkbox" required
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        [(ngModel)]="isAccepted">
+                    <label for="isAccepted" class="ml-2 block text-sm text-gray-900">
                         I agree to the
                         <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
                             Terms and Conditions
@@ -102,8 +119,7 @@
 
                 <!-- Register Button -->
                 <div>
-                    <button type="submit"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium 
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium 
                         text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none 
                         focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" (click)="onRegister()">
                         Register
@@ -128,4 +144,4 @@
     </div>
 </div>
 
-<app-footer></app-footer> 
+<app-footer></app-footer>
