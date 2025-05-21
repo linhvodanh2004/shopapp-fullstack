@@ -1,12 +1,14 @@
 package com.project.shopapp.services;
 
-import com.project.shopapp.components.JwtTokenUtil;
+import com.project.shopapp.components.JwtTokenUtils;
+import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.dtos.UserDTO;
 import com.project.shopapp.exceptions.*;
 import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.RoleRepository;
 import com.project.shopapp.repositories.UserRepository;
+import com.project.shopapp.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,20 +25,24 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+    private final LocalizationUtils localizationUtils;
 
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
         String phoneNumber = userDTO.getPhoneNumber();
+        if (!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
+            throw new Exception(localizationUtils.getLocalizedMessage(MessageKeys.PASSWORD_NOT_MATCHED));
+        }
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new DataIntegrityViolationException(
-                    "User with phone number " + phoneNumber + " already exists");
+            throw new DataIntegrityViolationException(localizationUtils.getLocalizedMessage(MessageKeys.PHONE_EXISTED));
         }
         Role role = roleRepository.findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Role not found"));
-        if(role.getName().toUpperCase().equals(Role.ADMIN)){
-            throw new PermissionDeniedException("You can't create an admin account");
+                .orElseThrow(() -> new DataNotFoundException(localizationUtils
+                        .getLocalizedMessage(MessageKeys.ROLE_NOT_FOUND)));
+        if (role.getName().toUpperCase().equals(Role.ADMIN)) {
+            throw new PermissionDeniedException(localizationUtils.getLocalizedMessage(MessageKeys.CREATE_ADMIN_FAILED));
         }
         User newUser = User.builder()
                 .fullName(userDTO.getFullName())
@@ -64,11 +70,13 @@ public class UserService implements IUserService {
     public String login(String phoneNumber, String password) throws Exception {
         Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
         if (user.isEmpty()) {
-            throw new DataNotFoundException("Invalid phone number or password.");
+            throw new DataNotFoundException(localizationUtils
+                    .getLocalizedMessage(MessageKeys.INVALID_PHONE_OR_PASSWORD));
         }
         if (user.get().getGoogleAccountId() == 0 && user.get().getFacebookAccountId() == 0) {
             if (!passwordEncoder.matches(password, user.get().getPassword())) {
-                throw new BadCredentialsException("Invalid phone number or password.");
+                throw new BadCredentialsException(localizationUtils
+                        .getLocalizedMessage(MessageKeys.INVALID_PHONE_OR_PASSWORD));
             }
         }
         UsernamePasswordAuthenticationToken authenticationToken =

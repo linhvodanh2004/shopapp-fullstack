@@ -5,7 +5,8 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { UserService } from '../service/user.service';
+import { RegisterDto } from '../dtos/users/register.dto';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -25,12 +26,12 @@ export class RegisterComponent {
   private _dateOfBirthString: string = '';
   phonePattern: RegExp = /^[0-9]{10}$/;
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.phone = '0984350255';
-    this.password = '123456';
-    this.retypePassword = '123456';
-    this.fullName = 'Phung Ngoc Linh';
-    this.address = 'Khu 900 Ha Noi';
+  constructor(private router: Router, private userService: UserService) {
+    this.phone = '';
+    this.password = '';
+    this.retypePassword = '';
+    this.fullName = '';
+    this.address = '';
     this.isAccepted = true;
     this.dateOfBirth = new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18);
     this._dateOfBirthString = this.dateOfBirth.toISOString().split('T')[0];
@@ -55,8 +56,8 @@ export class RegisterComponent {
     this.validateDate();
     this.validatePassword();
     if (this.registerForm.valid) {
-      const apiUrl = 'http://localhost:8080/api/v1/users/register';
-      const body = {
+      
+      const body:RegisterDto = {
         "fullname": this.fullName,
         "phone_number": this.phone,
         "address": this.address,
@@ -67,8 +68,7 @@ export class RegisterComponent {
         "google_account_id": 0,
         "role_id": 1
       }
-      const header = new HttpHeaders({ 'Content-Type': 'application/json' });
-      this.http.post(apiUrl, body, { headers: header, responseType: 'text' as 'json' })
+      this.userService.register(body)
         .subscribe({
           next: (response: any) => {
             if (response && (response.status === 200 || response.status === 201)) {
@@ -109,7 +109,6 @@ export class RegisterComponent {
 
     const ageDiff = today.getTime() - birthDate.getTime();
     const ageInYears = ageDiff / (1000 * 60 * 60 * 24 * 365);
-    console.log(ageInYears);
     if (ageInYears < 0 || ageInYears > 120) {
       this.registerForm.controls['dateOfBirth'].setErrors({ "invalidDate": true });
     }

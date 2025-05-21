@@ -3,8 +3,11 @@ package com.project.shopapp.controllers;
 import com.project.shopapp.dtos.UserDTO;
 import com.project.shopapp.dtos.UserLoginDTO;
 import com.project.shopapp.models.User;
+import com.project.shopapp.responses.UserLoginResponse;
+import com.project.shopapp.responses.UserRegisterResponse;
 import com.project.shopapp.services.IUserService;
-import com.project.shopapp.services.UserService;
+import com.project.shopapp.components.LocalizationUtils;
+import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +25,11 @@ import java.util.List;
 @RequestMapping("api/v1/users")
 public class UserController {
     private final IUserService userService;
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO
+    public ResponseEntity<?> createUser(
+            @Valid @RequestBody UserDTO userDTO
             , BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
@@ -32,23 +37,39 @@ public class UserController {
                         .stream().map(FieldError::getDefaultMessage).toList();
                 return ResponseEntity.badRequest().body(errors);
             }
-            if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
-                return ResponseEntity.badRequest().body("Password and retype password must be the same");
-            }
             User user = userService.createUser(userDTO);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(UserRegisterResponse
+                    .builder()
+                    .user(user)
+                    .message(localizationUtils.getLocalizedMessage(MessageKeys.REGISTER_SUCCESSFULLY))
+                    .build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    UserRegisterResponse
+                            .builder()
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.REGISTER_FAILED, e.getMessage()))
+                            .build()
+            );
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<?> login(
+            @Valid @RequestBody UserLoginDTO userLoginDTO
+    ) {
         try {
             String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(
+                    UserLoginResponse.builder()
+                            .token(token)
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY))
+                            .build()
+            );
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    UserLoginResponse.builder()
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
+                            .build());
         }
     }
 }

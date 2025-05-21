@@ -10,8 +10,8 @@ import { config } from './app/app.config.server';
 const bootstrap = () => bootstrapApplication
 (
     //  HomeComponent
-    // LoginComponent
-    RegisterComponent
+    LoginComponent
+    // RegisterComponent
     // OrderConfirmComponent
     , config);
 

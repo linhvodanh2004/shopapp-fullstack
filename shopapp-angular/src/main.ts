@@ -9,7 +9,7 @@ import { RegisterComponent } from './app/register/register.component';
 
 bootstrapApplication(
   // HomeComponent
-  RegisterComponent
-  // LoginComponent
+  LoginComponent
+  // RegisterComponent
   , appConfig)
   .catch((err) => console.error(err));
