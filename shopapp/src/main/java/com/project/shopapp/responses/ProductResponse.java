@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 //@NoArgsConstructor
 @Builder
 public class ProductResponse extends BaseResponse {
+    private String message;
     private String name;
     private float price;
     private String thumbnail;

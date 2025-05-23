@@ -39,9 +39,9 @@ public class WebSecurityConfig {
                     request
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
-                                    String.format("%s/users/login", apiPrefix)
-                            )
-                            .permitAll()
+                                    String.format("%s/users/login", apiPrefix),
+                                    String.format("%s/products/images/*", apiPrefix)
+                            ).permitAll()
                             .requestMatchers(HttpMethod.PUT,
                                     String.format("%s/orders/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(HttpMethod.POST,

@@ -12,4 +12,17 @@ public class MessageKeys {
     public static final String REGISTER_SUCCESSFULLY = "user.register.register_successfully";
     public static final String REGISTER_FAILED = "user.register.register_failed";
 
+    public static final String UPDATE_CATEGORY_SUCCESSFULLY = "category.update.update_successfully";
+    public static final String UPDATE_CATEGORY_FAILED = "category.update.update_failed";
+    public static final String CATEGORY_NOT_FOUND = "category.category_not_found";
+    public static final String CREATE_CATEGORY_SUCCESSFULLY = "category.create.create_successfully";
+    public static final String DELETE_CATEGORY_FAILED = "category.delete.delete_failed";
+    public static final String DELETE_CATEGORY_SUCCESSFULLY = "category.delete.delete_successfully";
+
+    public static final String INVALID_IMAGE_FILE = "product_image.invalid_image_file";
+    public static final String TOO_LARGE_FILE = "product_image.too_large_file";
+    public static final String STORE_IMAGE_SUCCESSFULLY = "product_image.store_image_successfully";
+    public static final String STORE_IMAGE_FAILED = "product_image.store_image_failed";
+
+
 }

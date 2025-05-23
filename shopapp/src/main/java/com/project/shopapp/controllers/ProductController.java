@@ -1,17 +1,21 @@
 package com.project.shopapp.controllers;
 
 import com.github.javafaker.Faker;
+import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.responses.ProductImageResponse;
 import com.project.shopapp.responses.ProductListResponse;
 import com.project.shopapp.responses.ProductResponse;
 import com.project.shopapp.services.ICategoryService;
 import com.project.shopapp.services.IProductService;
+import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -39,6 +43,7 @@ import java.util.UUID;
 public class ProductController {
     private final IProductService productService;
     private final ICategoryService categoryService;
+    private final LocalizationUtils localizationUtils;
 
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(
@@ -97,7 +102,9 @@ public class ProductController {
             if (files.size() > ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body("You can upload only 5 images maximum");
+                        .body(ProductImageResponse.builder()
+                                .message(localizationUtils
+                                        .getLocalizedMessage(MessageKeys.INVALID_IMAGE_FILE)).build());
             }
             List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file : files) {
@@ -105,14 +112,21 @@ public class ProductController {
                     continue;
                 }
                 if (file.getSize() > 10 * 1024 * 1024) {
-                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("The size of image is too large");
+                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(
+                            ProductImageResponse.builder()
+                                    .message(localizationUtils
+                                            .getLocalizedMessage(MessageKeys.TOO_LARGE_FILE, "10MB"))
+                    );
                 }
                 String contentType = file.getContentType();
                 if (contentType == null || !contentType.startsWith("image/")) {
-                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("The file must be image");
+                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                            .body(ProductImageResponse.builder()
+                                    .message(localizationUtils
+                                            .getLocalizedMessage(MessageKeys.INVALID_IMAGE_FILE))
+                                    .build());
                 }
                 String fileName = storeFile(file);
-
                 ProductImage productImage = productService.createProductImage(newProduct.getId(),
                         ProductImageDTO
                                 .builder()
@@ -120,15 +134,26 @@ public class ProductController {
                                 .build());
                 productImages.add(productImage);
             }
-            return ResponseEntity.ok(productImages);
+            return ResponseEntity.ok(
+                    productImages.stream().map(productImage
+                            -> ProductImageResponse.builder()
+                            .imageUrl(productImage.getImageUrl())
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.STORE_IMAGE_SUCCESSFULLY))
+                            .productId(productId)
+                            .build()
+                    )
+            );
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ProductImageResponse
+                    .builder()
+                    .message(localizationUtils.getLocalizedMessage(MessageKeys.STORE_IMAGE_FAILED, e.getMessage()))
+                    .build());
         }
     }
 
     private String storeFile(MultipartFile multipartFile) throws IOException {
         if (!isImage(multipartFile) || multipartFile.getOriginalFilename() == null) {
-            throw new IOException("Invalid image file format");
+            throw new IOException(localizationUtils.getLocalizedMessage(MessageKeys.INVALID_IMAGE_FILE));
         }
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         String uniqueName = UUID.randomUUID().toString() + "_" + fileName;
@@ -191,5 +216,22 @@ public class ProductController {
             }
         }
         return ResponseEntity.ok("Done");
+    }
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> getProductImage(@PathVariable("imageName") String imageName) {
+        try {
+            Path uploadDir = Paths.get("uploads/" + imageName);
+            UrlResource resource = new UrlResource(uploadDir.toUri());
+            if(resource.exists()){
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            }
+            else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
