@@ -75,6 +75,44 @@
                             d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
+                <div
+                    class="flex items-center justify-end gap-4 p-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white">
+
+                    <!-- 🌙 Dark Mode Toggle -->
+                    <button class="flex items-center cursor-pointer">
+
+                        <label for="darkModeToggle" class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="darkModeToggle" class="sr-only" />
+                            <div class="relative">
+                                <div class="w-10 h-6 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner"></div>
+                                <div
+                                    class="absolute left-0 top-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 transform peer-checked:translate-x-4">
+                                </div>
+                            </div>
+                            <span class="ml-2">Dark Mode</span>
+                        </label>
+                        <label for="lightModeToggle" class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="lightModeToggle" class="sr-only" />
+                            <div class="relative">
+                                <div class="w-10 h-6 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner"></div>
+                                <div
+                                    class="absolute left-0 top-0 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 transform peer-checked:translate-x-4">
+                                </div>
+                            </div>
+                            <span class="ml-2">Light Mode</span>
+                        </label>
+                    </button>
+                    <!-- 🌐 Language Toggle -->
+                    <label class="flex items-center gap-2">
+                        <select
+                            class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm">
+                            <option value="en">🇺🇸</option>
+                            <option value="vi">🇻🇳</option>
+                        </select>
+                    </label>
+
+                </div>
+
             </div>
         </div>
     </div>

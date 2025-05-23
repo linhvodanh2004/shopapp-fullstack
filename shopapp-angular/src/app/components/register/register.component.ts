@@ -5,8 +5,8 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { UserService } from '../service/user.service';
-import { RegisterDto } from '../dtos/users/register.dto';
+import { UserService } from '../../service/user.service';
+import { RegisterDto } from '../../dtos/users/register.dto';
 @Component({
   selector: 'app-register',
   standalone: true,
