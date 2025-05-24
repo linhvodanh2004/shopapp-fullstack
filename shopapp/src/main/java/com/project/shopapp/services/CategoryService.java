@@ -8,6 +8,7 @@ import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional
     public Category updateCategory(Long categoryId, CategoryDTO category) throws DataNotFoundException {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new DataNotFoundException(localizationUtils
@@ -48,6 +50,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategory(Long id) throws DataNotFoundException {
         if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
@@ -52,12 +53,14 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long id) {
         Optional<Product> product = productRepository.findById(id);
         product.ifPresent(productRepository::delete);
     }
 
     @Override
+    @Transactional
     public Product updateProduct(Long productId, ProductDTO productDTO) throws DataNotFoundException {
 
         Product existingProduct = getProductById(productId);
