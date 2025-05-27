@@ -47,13 +47,15 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(
-            @RequestParam("page") int page,
-            @RequestParam("limit") int limit
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "limit", defaultValue = "12") int limit,
+            @RequestParam(name = "category_id", defaultValue = "0") Long categoryId,
+            @RequestParam(name = "key_word", defaultValue = "") String keyWord
     ) {
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
                 Sort.by("id").ascending());
-        Page<ProductResponse> productResponsePagePage = productService.getAllProducts(pageRequest);
+        Page<ProductResponse> productResponsePagePage = productService.getAllProducts(keyWord, categoryId, pageRequest);
         int totalPages = productResponsePagePage.getTotalPages();
         List<ProductResponse> productResponses = productResponsePagePage.getContent();
         ProductListResponse productListResponse = ProductListResponse
@@ -217,18 +219,19 @@ public class ProductController {
         }
         return ResponseEntity.ok("Done");
     }
+
     @GetMapping("/images/{imageName}")
     public ResponseEntity<?> getProductImage(@PathVariable("imageName") String imageName) {
         try {
             Path uploadDir = Paths.get("uploads/" + imageName);
             UrlResource resource = new UrlResource(uploadDir.toUri());
-            if(resource.exists()){
+            if (resource.exists()) {
                 return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(resource);
-            }
-            else {
-                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.badRequest().contentType(MediaType.IMAGE_JPEG)
+                        .body(new UrlResource(Paths.get("uploads/404notfound.jpg").toUri()));
             }
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

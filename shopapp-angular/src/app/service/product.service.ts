@@ -12,10 +12,12 @@ import { Product } from '../models/products';
 export class ProductService {
     private readonly apiUrl = `${environment.apiUrlPrefix}/products`;
     constructor(private readonly http: HttpClient) { }
-    getProducts(page: number, limit: number): Observable<Product[]> {
+    getProducts(page: number, limit: number, keyword: string, category_id: number): Observable<Product[]> {
         const params = new HttpParams()
             .set('page', page.toString())
-            .set('limit', limit.toString());
+            .set('limit', limit.toString())
+            .set('keyword', keyword)
+            .set('category_id', category_id.toString());
         return this.http.get<Product[]>(this.apiUrl, { params });
     }
     

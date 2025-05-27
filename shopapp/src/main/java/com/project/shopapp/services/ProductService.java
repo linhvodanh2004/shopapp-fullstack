@@ -1,6 +1,5 @@
 package com.project.shopapp.services;
 
-import com.github.javafaker.Faker;
 import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
@@ -15,10 +14,8 @@ import com.project.shopapp.responses.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
@@ -77,8 +74,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
-        return productRepository.findAll(pageRequest)
+    public Page<ProductResponse> getAllProducts(String keyWord, Long categoryId, PageRequest pageRequest) {
+        return productRepository.searchProduct(keyWord, categoryId, pageRequest)
                 .map(ProductResponse::fromProduct);
     }
 

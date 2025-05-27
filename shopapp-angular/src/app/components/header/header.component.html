@@ -10,22 +10,19 @@
             <nav class="hidden md:flex space-x-8">
 
                 <div class="relative group">
-                    <div href="#"
-                        class="text-gray-600 hover:text-blue-600 transition-colors duration-200  group-hover:opacity-100 group-hover:visible">
-                        Category</div>
+                    <button
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-200 flex items-center space-x-1 hover:cursor-pointer"
+                        (click)="filterProducts(0)">
+                        <span>Category</span>
+                    </button>
                     <div
-                        class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                        class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                         <div class="py-1">
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 bg-gray-100">Electronics</a>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 bg-gray-100">Clothes</a>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 bg-gray-100">Gaming</a>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 bg-gray-100">Gadgets</a>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 bg-gray-100">Accessories</a>
+                            <div *ngFor="let category of categories"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 hover:cursor-pointer"
+                                (click)="filterProducts(category.id)">
+                                {{category.name}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,7 +72,7 @@
                             d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-                
+
 
             </div>
         </div>
