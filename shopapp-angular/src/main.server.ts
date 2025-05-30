@@ -9,10 +9,11 @@ import { config } from './app/app.config.server';
 
 const bootstrap = () => bootstrapApplication
 (
-     HomeComponent
+    // HomeComponent
     // LoginComponent
     // RegisterComponent
     // OrderConfirmComponent
+    ProductDetailComponent
     , config);
 
 export default bootstrap;

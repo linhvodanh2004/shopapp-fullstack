@@ -26,7 +26,11 @@ interface Product {
 })
 export class ProductDetailComponent {
   quantity: number = 1;
-  selectedImage: string = '';
+  currentImageIndex: number = 0;
+  visibleImages: string[] = [];
+  startVisibleIndex: number = 0;
+  endVisibleIndex: number = 4;
+  isAnimating: boolean = false;
   
   // Mock product data - replace with actual data from your service
   product: Product = {
@@ -36,12 +40,12 @@ export class ProductDetailComponent {
     discount: 10,
     description: 'Experience crystal-clear sound with our premium wireless headphones. Featuring active noise cancellation, 30-hour battery life, and comfortable over-ear design.',
     images: [
-      // 'https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/d/i/dien-thoai-tecno-camon-40_1_.png',
-      // 'https://cdn2.cellphones.com.vn/x/media/catalog/product/s/a/samsung_galaxy_s25_ultra_-_2.png',
       'https://cdn2.cellphones.com.vn/x/media/catalog/product/s/a/samsung_galaxy_s25_ultra_-_4.png',
       'https://cdn2.cellphones.com.vn/x/media/catalog/product/s/a/samsung_galaxy_s25_ultra_-_5.png',
       'https://cdn2.cellphones.com.vn/x/media/catalog/product/m/a/macbook-air-m2-2022-16gb_3_.png',
-      'https://cdn2.cellphones.com.vn/x/media/catalog/product/m/a/macbook-air-m2-2022-16gb_9_.png'
+      'https://cdn2.cellphones.com.vn/x/media/catalog/product/m/a/macbook-air-m2-2022-16gb_9_.png',
+      'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/d/i/dien-thoai-tecno-camon-40-pro_4_.png',
+      'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/d/i/dien-thoai-tecno-camon-40-pro_8_.png'
     ],
     reviews: 128,
     inStock: true,
@@ -50,8 +54,65 @@ export class ProductDetailComponent {
   };
 
   constructor() {
-    // Set the first image as selected by default
-    this.selectedImage = this.product.images[0];
+    this.updateVisibleImages();
+  }
+
+  updateVisibleImages() {
+    this.visibleImages = this.product.images.slice(this.startVisibleIndex, this.endVisibleIndex);
+  }
+
+  togglePreviousImage() {
+    if (this.isAnimating || this.product.images.length <= 4) return;
+    
+    if (this.currentImageIndex > 0) {
+      this.isAnimating = true;
+      this.currentImageIndex--;
+      
+      // Update gallery if current image is at the start of visible images
+      if (this.currentImageIndex < this.startVisibleIndex) {
+        this.startVisibleIndex = Math.max(0, this.currentImageIndex);
+        this.endVisibleIndex = Math.min(this.product.images.length, this.startVisibleIndex + 4);
+        this.updateVisibleImages();
+      }
+      
+      setTimeout(() => {
+        this.isAnimating = false;
+      }, 300);
+    }
+  }
+
+  toggleNextImage() {
+    if (this.isAnimating || this.product.images.length <= 4) return;
+    
+    if (this.currentImageIndex < this.product.images.length - 1) {
+      this.isAnimating = true;
+      this.currentImageIndex++;
+      
+      // Update gallery if current image is at the end of visible images
+      if (this.currentImageIndex >= this.endVisibleIndex) {
+        this.startVisibleIndex = Math.min(
+          this.product.images.length - 4,
+          this.currentImageIndex - 3
+        );
+        this.endVisibleIndex = this.startVisibleIndex + 4;
+        this.updateVisibleImages();
+      }
+      
+      setTimeout(() => {
+        this.isAnimating = false;
+      }, 300);
+    }
+  }
+
+  selectImage(index: number) {
+    if (this.isAnimating) return;
+    
+    this.isAnimating = true;
+    this.currentImageIndex = this.startVisibleIndex + index;
+    
+    setTimeout(() => {
+      this.isAnimating = false;
+    }, 300);
   }
 
   increaseQuantity() {
@@ -67,12 +128,10 @@ export class ProductDetailComponent {
   }
 
   addToCart() {
-    // Implement add to cart functionality
     console.log('Adding to cart:', this.product.name, 'Quantity:', this.quantity);
   }
 
   buyNow() {
-    // Implement buy now functionality
     console.log('Buying now:', this.product.name, 'Quantity:', this.quantity);
   }
 }

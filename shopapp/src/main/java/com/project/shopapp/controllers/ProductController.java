@@ -50,7 +50,7 @@ public class ProductController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "limit", defaultValue = "12") int limit,
             @RequestParam(name = "category_id", defaultValue = "0") Long categoryId,
-            @RequestParam(name = "key_word", defaultValue = "") String keyWord
+            @RequestParam(name = "keyword", defaultValue = "") String keyWord
     ) {
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
@@ -235,6 +235,28 @@ public class ProductController {
             }
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/images")
+    public ResponseEntity<?> getProductImagesByProductId(@PathVariable("id") String productId) {
+        try {
+            List<ProductImage> productImages = productService.getProductImagesByProductId(Long.parseLong(productId));
+            if(productImages.isEmpty()){
+                return ResponseEntity.badRequest()
+                        .body("404notfound.jpg");
+            }
+            List<ProductImageResponse> productImageResponses = productImages.stream().map(productImage
+                    -> ProductImageResponse.builder()
+                    .imageUrl(productImage.getImageUrl())
+                    .productId(Long.parseLong(productId))
+                    .build()).toList();
+            return ResponseEntity.ok().body(productImageResponses);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ProductImageResponse
+                    .builder()
+                    .message(localizationUtils.getLocalizedMessage(MessageKeys.STORE_IMAGE_FAILED, e.getMessage()))
+                    .build());
         }
     }
 }

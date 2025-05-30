@@ -8,6 +8,7 @@ import { ProductService } from '../../service/product.service';
 import { CategoryStateService } from '../../service/category-state.service';
 import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
+import { CategoryService } from '../../service/category.service';
 
 @Component({
   selector: 'app-home',
@@ -29,12 +30,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private categoryStateService: CategoryStateService
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
-    this.categorySubscription = this.categoryStateService.selectedCategoryId$.subscribe(categoryId => {
+    this.categorySubscription = this.categoryService.selectedCategoryId$.subscribe((categoryId: number) => {
       this.category_id = categoryId || 0;
       this.currentPage = 0;
       this.loadProducts();
@@ -109,7 +110,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onSearch() {
     this.currentPage = 0;
+    this.category_id = 0;
     this.loadProducts();
+    console.log(this.searchQuery);
+    console.log(this.category_id);
   }
 
   onQuickView(product: Product) {

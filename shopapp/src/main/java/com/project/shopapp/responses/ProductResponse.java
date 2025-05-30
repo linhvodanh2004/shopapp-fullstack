@@ -23,6 +23,7 @@ public class ProductResponse extends BaseResponse {
     private String thumbnail;
     private String description;
 
+
     @JsonProperty("category_id") // Use JsonProperty for mapping to database
     private Long categoryId;
     public static ProductResponse fromProduct(Product product){

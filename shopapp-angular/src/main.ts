@@ -8,8 +8,9 @@ import { LoginComponent } from './app/components/login/login.component';
 import { RegisterComponent } from './app/components/register/register.component';
 
 bootstrapApplication(
-  HomeComponent
+  // HomeComponent
   // LoginComponent
   // RegisterComponent
+  ProductDetailComponent
   , appConfig)
   .catch((err) => console.error(err));

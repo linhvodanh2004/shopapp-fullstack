@@ -6,4 +6,5 @@ export interface Product {
     thumbnail: string;
     url: string;
     category_id: number;
+    images: string[];
 }

@@ -20,6 +20,13 @@ export class ProductService {
             .set('category_id', category_id.toString());
         return this.http.get<Product[]>(this.apiUrl, { params });
     }
-    
+    getImagesByProductId(productId: number): Observable<string[]> {
+        const url = `${this.apiUrl}/${productId}/images`;
+        return this.http.get<string[]>(url);
+    }
+    getProductById(productId: number): Observable<Product> {
+        const url = `${this.apiUrl}/${productId}`;
+        return this.http.get<Product>(url);
+    }
 }
 

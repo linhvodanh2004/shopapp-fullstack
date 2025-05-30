@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   }
 
   filterProducts(categoryId: number) {
-    this.categoryStateService.setSelectedCategory(categoryId);
+    this.categoryService.setSelectedCategory(categoryId);
   }
 
   toggleMode() {

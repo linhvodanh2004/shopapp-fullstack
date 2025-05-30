@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -100,6 +101,11 @@ public class ProductService implements IProductService {
                     + ProductImage.MAXIMUM_IMAGES_PER_PRODUCT + " images");
         }
         return productImageRepository.save(productImage);
+    }
+
+    @Override
+    public List<ProductImage> getProductImagesByProductId(Long productId) {
+        return productImageRepository.findByProductId(productId);
     }
 
 }

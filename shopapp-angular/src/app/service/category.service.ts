@@ -10,6 +10,16 @@ import { environment } from '../environments/environment';
 })
 export class CategoryService {
     private readonly apiUrl = `${environment.apiUrlPrefix}/categories`;
+    private selectedCategoryId = new BehaviorSubject<number | null>(null);
+    selectedCategoryId$ = this.selectedCategoryId.asObservable();
+  
+    setSelectedCategory(categoryId: number | null) {
+      this.selectedCategoryId.next(categoryId);
+    }
+  
+    getSelectedCategory() {
+      return this.selectedCategoryId.value;
+    }
 
     constructor(private http: HttpClient) {}
     getCategories(): Observable<Category[]> {

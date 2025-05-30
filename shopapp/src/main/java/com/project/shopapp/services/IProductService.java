@@ -10,6 +10,8 @@ import com.project.shopapp.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 public interface IProductService {
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException;
     public Product getProductById(Long id) throws DataNotFoundException;
@@ -19,5 +21,6 @@ public interface IProductService {
     public Page<ProductResponse> getAllProducts(String keyWord, Long categoryId, PageRequest pageRequest);
 
     public boolean existsByName(String name);
-    public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws DataNotFoundException, Exception;
+    public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws Exception;
+    public List<ProductImage> getProductImagesByProductId(Long productId);
 }
