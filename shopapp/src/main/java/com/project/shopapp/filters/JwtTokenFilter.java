@@ -38,28 +38,28 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             if (isBypassToken(request)) {
                 filterChain.doFilter(request, response);
-                return;
+//                return;
             }
-            final String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                return;
-            }
-            final String token = authorizationHeader.substring(7);
-            final String phoneNumber = jwtTokenUtil.getPhoneNumberFromToken(token);
-            if (phoneNumber != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(phoneNumber);
-                if (jwtTokenUtil.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            }
+//            final String authorizationHeader = request.getHeader("Authorization");
+//            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//                return;
+//            }
+//            final String token = authorizationHeader.substring(7);
+//            final String phoneNumber = jwtTokenUtil.getPhoneNumberFromToken(token);
+//            if (phoneNumber != null &&
+//                    SecurityContextHolder.getContext().getAuthentication() == null) {
+//                UserDetails userDetails = userDetailsService.loadUserByUsername(phoneNumber);
+//                if (jwtTokenUtil.validateToken(token, userDetails)) {
+//                    UsernamePasswordAuthenticationToken authentication =
+//                            new UsernamePasswordAuthenticationToken(
+//                                    userDetails,
+//                                    null,
+//                                    userDetails.getAuthorities());
+//                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                    SecurityContextHolder.getContext().setAuthentication(authentication);
+//                }
+//            }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");

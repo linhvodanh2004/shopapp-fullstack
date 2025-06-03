@@ -15,7 +15,7 @@ import lombok.*;
 public class ProductImageDTO {
 
     @Size(min = 5, max = 200, message = "Image url must be between 5 and 200.")
-    @JsonProperty("product_id")
+    @JsonProperty("image_url")
     private String imageUrl;
 
     @JsonProperty("product_id")

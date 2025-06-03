@@ -11,9 +11,6 @@ import lombok.*;
 @Builder
 public class ProductImageResponse {
 
-    @JsonProperty("message")
-    private String message;
-
     @JsonProperty("image_url")
     private String imageUrl;
 

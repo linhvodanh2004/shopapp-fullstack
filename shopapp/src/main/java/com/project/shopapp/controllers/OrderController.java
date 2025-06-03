@@ -1,6 +1,7 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDTO;
+import com.project.shopapp.models.Order;
 import com.project.shopapp.responses.OrderResponse;
 import com.project.shopapp.services.IOrderService;
 import jakarta.validation.Valid;
@@ -27,8 +28,8 @@ public class OrderController {
                         .stream().map(FieldError::getDefaultMessage).toList();
                 return ResponseEntity.badRequest().body(errors);
             }
-            OrderResponse orderResponse = orderService.createOrder(orderDTO);
-            return ResponseEntity.ok(orderResponse);
+            Order order = orderService.createOrder(orderDTO);
+            return ResponseEntity.ok(order);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -37,7 +38,7 @@ public class OrderController {
     @GetMapping("/user/{id}") // orders/user/{ user_id }
     public ResponseEntity<?> getOrdersByUserId(@PathVariable("id") Long userId) {
         try {
-            List<OrderResponse> orderResponses = orderService.getOrdersByUserId(userId);
+            List<Order> orderResponses = orderService.getOrdersByUserId(userId);
             return ResponseEntity.ok(orderResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -46,7 +47,7 @@ public class OrderController {
     @GetMapping("/{orderId}") // orders/{ order_id }
     public ResponseEntity<?> getOrderById(@PathVariable("orderId") Long orderId) {
         try {
-            OrderResponse order = orderService.getOrderById(orderId);
+            Order order = orderService.getOrderById(orderId);
             return ResponseEntity.ok(order);
         }
         catch (Exception e) {
@@ -57,7 +58,7 @@ public class OrderController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder(@Valid @PathVariable Long id, @Valid @RequestBody OrderDTO orderDTO) {
         try {
-            OrderResponse orderResponse = orderService.updateOrder(id, orderDTO);
+            Order orderResponse = orderService.updateOrder(id, orderDTO);
             return ResponseEntity.ok(orderResponse);
         }
         catch (Exception e) {

@@ -10,22 +10,29 @@ import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 //@NoArgsConstructor
 @Builder
-public class ProductResponse extends BaseResponse {
-    private String message;
+public class ProductResponse{
+    private Long id;
     private String name;
     private float price;
     private String thumbnail;
     private String description;
-
-
     @JsonProperty("category_id") // Use JsonProperty for mapping to database
     private Long categoryId;
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
+
     public static ProductResponse fromProduct(Product product){
         ProductResponse productResponse = ProductResponse
                 .builder()

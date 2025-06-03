@@ -10,9 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CategoryResponse {
-    @JsonProperty("message")
-    private String message;
-
-    @JsonProperty("category")
-    private Category category;
+    private Long id;
+    private String name;
 }

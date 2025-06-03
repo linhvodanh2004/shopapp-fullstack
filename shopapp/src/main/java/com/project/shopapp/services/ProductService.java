@@ -4,6 +4,8 @@ import com.project.shopapp.dtos.ProductDTO;
 import com.project.shopapp.dtos.ProductImageDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
 import com.project.shopapp.exceptions.InvalidParamException;
+import com.project.shopapp.mappers.ProductImageMapper;
+import com.project.shopapp.mappers.ProductMapper;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,19 +27,16 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
 
     @Override
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new DataNotFoundException("Category not found"));
 
-        Product product = Product.builder()
-                .name(productDTO.getName())
-                .price(productDTO.getPrice())
-                .thumbnail(productDTO.getThumbnail())
-                .description(productDTO.getDescription())
-                .category(category)
-                .build();
+        Product product = productMapper.toProduct(productDTO);
+        product.setCategory(category);
         return productRepository.save(product);
     }
 
@@ -50,12 +48,12 @@ public class ProductService implements IProductService {
 
     }
 
-    @Override
-    @Transactional
-    public void deleteProduct(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        product.ifPresent(productRepository::delete);
-    }
+//    @Override
+//    @Transactional
+//    public void deleteProduct(Long id) {
+//        Optional<Product> product = productRepository.findById(id);
+//        product.ifPresent(productRepository::delete);
+//    }
 
     @Override
     @Transactional
@@ -65,19 +63,15 @@ public class ProductService implements IProductService {
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new DataNotFoundException("Category not found"));
 
-        existingProduct.setName(productDTO.getName());
-        existingProduct.setPrice(productDTO.getPrice());
-        existingProduct.setThumbnail(productDTO.getThumbnail());
-        existingProduct.setDescription(productDTO.getDescription());
+        productMapper.updateProduct(existingProduct, productDTO);
         existingProduct.setCategory(category);
 
         return productRepository.save(existingProduct);
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(String keyWord, Long categoryId, PageRequest pageRequest) {
-        return productRepository.searchProduct(keyWord, categoryId, pageRequest)
-                .map(ProductResponse::fromProduct);
+    public Page<Product> getAllProducts(String keyWord, Long categoryId, PageRequest pageRequest) {
+        return productRepository.searchProduct(keyWord, categoryId, pageRequest);
     }
 
     @Override
@@ -89,11 +83,8 @@ public class ProductService implements IProductService {
     public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws Exception {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new DataNotFoundException("Product not found"));
-        ProductImage productImage = ProductImage
-                .builder()
-                .imageUrl(productImageDTO.getImageUrl())
-                .product(product)
-                .build();
+        ProductImage productImage = productImageMapper.toProductImage(productImageDTO);
+        productImage.setProduct(product);
         // Never insert more than 5 images in one product
         int size = productImageRepository.findByProductId(productId).size();
         if (size >= ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {

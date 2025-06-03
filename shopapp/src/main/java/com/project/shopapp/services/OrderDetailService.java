@@ -2,6 +2,7 @@ package com.project.shopapp.services;
 
 import com.project.shopapp.dtos.OrderDetailDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
+import com.project.shopapp.mappers.OrderDetailMapper;
 import com.project.shopapp.models.Order;
 import com.project.shopapp.models.OrderDetail;
 import com.project.shopapp.models.Product;
@@ -9,7 +10,6 @@ import com.project.shopapp.repositories.OrderDetailRepository;
 import com.project.shopapp.repositories.OrderRepository;
 import com.project.shopapp.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +22,7 @@ public class OrderDetailService implements IOrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final OrderDetailMapper orderDetailMapper;
     @Override
     public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         Order order = orderRepository.findById(orderDetailDTO.getOrderId())
@@ -30,11 +31,7 @@ public class OrderDetailService implements IOrderDetailService {
         Product product = productRepository.findById(orderDetailDTO.getProductId())
                 .orElseThrow(() -> new DataNotFoundException("Product not found with id: "
                         + orderDetailDTO.getProductId()));
-        OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setColor(orderDetailDTO.getColor());
-        orderDetail.setPrice(orderDetailDTO.getPrice());
-        orderDetail.setTotalMoney(orderDetailDTO.getTotalMoney());
-        orderDetail.setNumberOfProducts(orderDetailDTO.getNumberOfProducts());
+        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDTO);
         orderDetail.setOrder(order);
         orderDetail.setProduct(product);
         return orderDetailRepository.save(orderDetail);
@@ -64,10 +61,7 @@ public class OrderDetailService implements IOrderDetailService {
         Product product = productRepository.findById(orderDetailDTO.getProductId())
                 .orElseThrow(() -> new DataNotFoundException("Product not found with id: "
                         + orderDetailDTO.getProductId()));
-        orderDetail.setColor(orderDetailDTO.getColor());
-        orderDetail.setPrice(orderDetailDTO.getPrice());
-        orderDetail.setTotalMoney(orderDetailDTO.getTotalMoney());
-        orderDetail.setNumberOfProducts(orderDetailDTO.getNumberOfProducts());
+        orderDetailMapper.updateOrderDetail(orderDetail, orderDetailDTO);
         orderDetail.setOrder(order);
         orderDetail.setProduct(product);
         return orderDetailRepository.save(orderDetail);

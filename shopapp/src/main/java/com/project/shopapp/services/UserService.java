@@ -4,6 +4,7 @@ import com.project.shopapp.components.JwtTokenUtils;
 import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.dtos.UserDTO;
 import com.project.shopapp.exceptions.*;
+import com.project.shopapp.mappers.UserMapper;
 import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.RoleRepository;
@@ -28,6 +29,7 @@ public class UserService implements IUserService {
     private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
+    private final UserMapper userMapper;
 
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
@@ -44,17 +46,9 @@ public class UserService implements IUserService {
         if (role.getName().toUpperCase().equals(Role.ADMIN)) {
             throw new PermissionDeniedException(localizationUtils.getLocalizedMessage(MessageKeys.CREATE_ADMIN_FAILED));
         }
-        User newUser = User.builder()
-                .fullName(userDTO.getFullName())
-                .phoneNumber(userDTO.getPhoneNumber())
-                .address(userDTO.getAddress())
-                .dateOfBirth(userDTO.getDateOfBirth())
-                .facebookAccountId(userDTO.getFacebookAccountId())
-                .googleAccountId(userDTO.getGoogleAccountId())
-                .active(true)
-                .build();
-
+        User newUser = userMapper.toUser(userDTO);
         newUser.setRole(role);
+        newUser.setActive(true);
         // password is not required if fb or gg account is available
         if (userDTO.getGoogleAccountId() == 0 && userDTO.getFacebookAccountId() == 0) {
             // encoding password before saving in database

@@ -3,6 +3,7 @@ package com.project.shopapp.services;
 import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
+import com.project.shopapp.mappers.CategoryMapper;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.utils.MessageKeys;
@@ -17,13 +18,11 @@ import java.util.List;
 public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
     private final LocalizationUtils localizationUtils;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public Category createCategory(CategoryDTO category) {
-        Category newCategory = Category
-                .builder()
-                .name(category.getName())
-                .build();
+        Category newCategory = categoryMapper.toCategory(category);
         return categoryRepository.save(newCategory);
     }
 
@@ -45,7 +44,7 @@ public class CategoryService implements ICategoryService {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new DataNotFoundException(localizationUtils
                         .getLocalizedMessage(MessageKeys.CATEGORY_NOT_FOUND)));
-        existingCategory.setName(category.getName());
+        categoryMapper.updateCategory(existingCategory, category);
         return categoryRepository.save(existingCategory);
     }
 
