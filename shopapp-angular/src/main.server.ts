@@ -13,7 +13,9 @@ const bootstrap = () => bootstrapApplication
     // LoginComponent
     // RegisterComponent
     // OrderConfirmComponent
-    ProductDetailComponent
+    // // ProductDetComponent
+    // OrderCheckoutailComponent
+    OrderCheckoutComponent
     , config);
 
 export default bootstrap;

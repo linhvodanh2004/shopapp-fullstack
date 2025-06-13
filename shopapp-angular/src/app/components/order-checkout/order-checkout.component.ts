@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-
+import { CartService } from '../../service/cart.service';
+import { ProductService } from '../../service/product.service';
+import { Product } from '../../models/product';
 interface PersonalInfo {
   fullName: string;
   email: string;
@@ -12,10 +14,8 @@ interface PersonalInfo {
 }
 
 interface CartItem {
-  name: string;
-  price: number;
+  product_id: number;
   quantity: number;
-  image: string;
 }
 
 @Component({
@@ -25,71 +25,58 @@ interface CartItem {
   templateUrl: './order-checkout.component.html',
   styleUrl: './order-checkout.component.scss'
 })
-export class OrderCheckoutComponent {
-  personalInfo: PersonalInfo = {
-    fullName: '',
-    email: '',
-    phone: '',
-    address: ''
-  };
+export class OrderCheckoutComponent implements OnInit {
+  constructor(private cartService: CartService, private productService: ProductService) { }
 
-  // Mock cart items - replace with actual cart data
-  cartItems: CartItem[] = [
-    {
-      name: 'Premium Wireless Headphones',
-      price: 89.99,
-      quantity: 1,
-      image: 'https://cdn2.cellphones.com.vn/x/media/catalog/product/s/a/samsung_galaxy_s25_ultra_-_4.png'
-    },
-    {
-      name: 'Smart Watch Series 5',
-      price: 199.99,
-      quantity: 2,
-      image: 'https://cdn2.cellphones.com.vn/x/media/catalog/product/s/a/samsung_galaxy_s25_ultra_-_5.png'
-    }
-  ];
-
-  couponCode: string = '';
-  appliedCoupon: string | null = null;
-  discount: number = 0;
-  shipping: number = 10;
+  cart: Map<number, number> = new Map();
+  cartItems: CartItem[] = [];
+  products: Product[] = [];
+  productIds: string = '';
+  ngOnInit(): void {
+    this.productIds = this.cartService.getProductIdToStr();
+    this.productService.getProductByIds(this.productIds).subscribe((products) => {
+      this.products = products;
+    });
+  }
 
   get subtotal(): number {
-    return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.cartItems.reduce((total, item) => total + (this.products.find(p => p.id === item.product_id)?.price || 0) * item.quantity, 0);
   }
 
   get discountAmount(): number {
-    return (this.subtotal * this.discount) / 100;
+    // return (this.subtotal * this.discount) / 100;
+    return 0;
   }
 
   get total(): number {
-    return this.subtotal - this.discountAmount + this.shipping;
+    return this.subtotal - this.discountAmount
+    // + this.shipping;
   }
 
   applyCoupon() {
     // Mock coupon validation - replace with actual coupon logic
-    if (this.couponCode.toUpperCase() === 'WELCOME10') {
-      this.appliedCoupon = this.couponCode;
-      this.discount = 10;
-    } else {
-      this.appliedCoupon = null;
-      this.discount = 0;
-      alert('Invalid coupon code');
-    }
+    // if (this.couponCode.toUpperCase() === 'WELCOME10') {
+    //   this.appliedCoupon = this.couponCode;
+    //   this.discount = 10;
+    // } else {
+    //   this.appliedCoupon = null;
+    //   this.discount = 0;
+    //   alert('Invalid coupon code');
+    // }
   }
 
   proceedToCheckout() {
     // Validate form
-    if (!this.personalInfo.fullName || !this.personalInfo.email || !this.personalInfo.phone || !this.personalInfo.address) {
-      alert('Please fill in all required fields');
-      return;
-    }
+    // if (!this.personalInfo.fullName || !this.personalInfo.email || !this.personalInfo.phone || !this.personalInfo.address) {
+    //   alert('Please fill in all required fields');
+    //   return;
+    // }
 
-    // Mock checkout process - replace with actual payment integration
-    console.log('Processing checkout:', {
-      personalInfo: this.personalInfo,
-      items: this.cartItems,
-      total: this.total
-    });
+    // // Mock checkout process - replace with actual payment integration
+    // console.log('Processing checkout:', {
+    //   personalInfo: this.personalInfo,
+    //   items: this.cartItems,
+    //   total: this.total
+    // });
   }
 } 

@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { Product } from '../../models/products';
+import { Product } from '../../models/product';
 import { ProductService } from '../../service/product.service';
-import { CategoryStateService } from '../../service/category-state.service';
 import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
 import { CategoryService } from '../../service/category.service';
@@ -35,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadProducts();
-    this.categorySubscription = this.categoryService.selectedCategoryId$.subscribe((categoryId: number) => {
+    this.categorySubscription = this.categoryService.selectedCategoryId$.subscribe((categoryId: number | null) => {
       this.category_id = categoryId || 0;
       this.currentPage = 0;
       this.loadProducts();

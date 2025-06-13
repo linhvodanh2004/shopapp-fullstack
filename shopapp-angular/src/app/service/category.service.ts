@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Category } from '../models/category';
 import { environment } from '../environments/environment';
+import { map } from 'rxjs/operators';
+import { ApiResponse } from '../responses/api.response';
 
 
 @Injectable({
@@ -22,7 +24,15 @@ export class CategoryService {
     }
 
     constructor(private http: HttpClient) {}
+    
     getCategories(): Observable<Category[]> {
-        return this.http.get<Category[]>(this.apiUrl);
+        return this.http.get<ApiResponse<Category[]>>(this.apiUrl).pipe(
+            map(response => response.data)
+        );
+    }
+    getCategoryById(id: number): Observable<Category> {
+        return this.http.get<ApiResponse<Category>>(`${this.apiUrl}/${id}`).pipe(
+            map(response => response.data)
+        );
     }
 }

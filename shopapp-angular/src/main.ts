@@ -11,6 +11,7 @@ bootstrapApplication(
   // HomeComponent
   // LoginComponent
   // RegisterComponent
-  ProductDetailComponent
+  // ProductDetailComponent
+  OrderCheckoutComponent
   , appConfig)
   .catch((err) => console.error(err));

@@ -3,8 +3,7 @@ import { CategoryService } from '../../service/category.service';
 import { Category } from '../../models/category';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CategoryStateService } from '../../service/category-state.service';
-
+import { CartService } from '../../service/cart.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -15,14 +14,21 @@ import { CategoryStateService } from '../../service/category-state.service';
 export class HeaderComponent implements OnInit {
   isDarkMode = false;
   categories: Category[] = [];
+  cartCount: number = 0;
 
   constructor(
     private readonly categoryService: CategoryService,
-    private readonly categoryStateService: CategoryStateService
+    private readonly cartService: CartService
   ) { }
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadCartCount();
+  }
+  loadCartCount(): void {
+    this.cartService.cartCount$.subscribe((count) => {
+      this.cartCount = count;
+    });
   }
 
   loadCategories(): void {
