@@ -25,7 +25,7 @@ public class ApiResponse<T>{
                 .success(true)
                 .data(data)
                 .status(HttpStatus.OK.value())
-                .message("OK")
+                .message(HttpStatus.OK.getReasonPhrase())
                 .build();
     }
 //    public static ApiResponse<Object> badRequest(List<String> errors){

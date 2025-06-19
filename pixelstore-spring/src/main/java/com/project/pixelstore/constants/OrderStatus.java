@@ -1,4 +1,4 @@
-package com.project.pixelstore.constant;
+package com.project.pixelstore.constants;
 
 public class OrderStatus
 {

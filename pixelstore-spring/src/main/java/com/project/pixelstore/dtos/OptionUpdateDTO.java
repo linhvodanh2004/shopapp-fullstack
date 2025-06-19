@@ -1,8 +1,14 @@
 package com.project.pixelstore.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,11 +16,11 @@ import lombok.*;
 @Setter
 @Builder
 @Data
-public class CategoryDTO {
-    @NotEmpty(message = "Category name must not be empty")
+public class OptionUpdateDTO {
+    @NotEmpty(message = "Name is required")
     private String name;
 
+    @NotEmpty(message = "Name is required")
     @JsonProperty("name_vie")
-    @NotEmpty(message = "Category name in Vietnamese must not be empty")
     private String nameVie;
 }

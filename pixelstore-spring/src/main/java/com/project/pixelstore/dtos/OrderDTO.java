@@ -1,6 +1,7 @@
 package com.project.pixelstore.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.pixelstore.validations.email.ValidEmail;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -23,7 +24,7 @@ public class OrderDTO {
     @JsonProperty("fullname")
     private String fullName;
 
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "Email is invalid")
+    @ValidEmail
     private String email;
 
     @JsonProperty("phone_number")
@@ -32,21 +33,31 @@ public class OrderDTO {
     private String phoneNumber;
 
     private String address;
+    private String state;
+    private String city;
+    private String country;
+
+    @JsonProperty("postal_code")
+    private String postalCode;
+
     private String note;
+    private String status;
 
-    @JsonProperty("total_money")
-    @Min(value = 0, message = "Total money must be greater than 0")
-    private Float totalMoney;
-
-    @JsonProperty("shipping_date")
-    private LocalDateTime shippingDate;
+    @JsonProperty("calculated_price")
+    private Float calculatedPrice;
 
     @JsonProperty("shipping_method")
     private String shippingMethod;
 
-    @JsonProperty("shipping_address")
-    private String shippingAddress;
+    @JsonProperty("tracking_number")
+    private String trackingNumber;
 
     @JsonProperty("payment_method")
     private String paymentMethod;
+
+    @JsonProperty("shipping_fee")
+    private Float shippingFee;
+
+    @JsonProperty("coupon_id")
+    private Long couponId;
 }

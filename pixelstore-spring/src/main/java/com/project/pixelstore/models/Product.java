@@ -21,14 +21,18 @@ public class Product extends BaseEntity{
 
     @Column(nullable = false, length = 350)
     private String name;
+
+    @Column(name = "name_vie", length = 350)
+    private String nameVie;
+
     private Float price;
     private Float discount;
 
     @Column(name = "quantity")
-    private Integer Quantity;
+    private Integer quantity;
 
     @Column(name = "sold")
-    private Integer Sold;
+    private Integer sold;
 
     @Column(length = 300)
     private String thumbnail;

@@ -1,10 +1,22 @@
 package com.project.pixelstore.models;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "coupons")
@@ -36,6 +48,8 @@ public class Coupon extends BaseEntity{
     @Column(nullable = false)
     private String type;
 
+    // Value refers to sale percent if type is percentage
+    // Value refers to sale amount if type is fixed_amount
     @Column(nullable = false)
     private Float value;
 

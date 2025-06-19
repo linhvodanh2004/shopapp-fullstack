@@ -4,7 +4,7 @@ import com.project.pixelstore.dtos.OrderDTO;
 import com.project.pixelstore.exceptions.DataNotFoundException;
 import com.project.pixelstore.mappers.OrderMapper;
 import com.project.pixelstore.models.Order;
-import com.project.pixelstore.constant.OrderStatus;
+import com.project.pixelstore.constants.OrderStatus;
 import com.project.pixelstore.models.User;
 import com.project.pixelstore.repositories.OrderRepository;
 import com.project.pixelstore.repositories.UserRepository;

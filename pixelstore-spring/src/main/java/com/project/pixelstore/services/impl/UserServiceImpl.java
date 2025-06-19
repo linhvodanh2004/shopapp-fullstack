@@ -2,7 +2,7 @@ package com.project.pixelstore.services.impl;
 
 import com.project.pixelstore.components.JwtTokenUtils;
 import com.project.pixelstore.components.LocalizationUtils;
-import com.project.pixelstore.constant.UserRole;
+import com.project.pixelstore.constants.UserRole;
 import com.project.pixelstore.dtos.UserDTO;
 import com.project.pixelstore.mappers.UserMapper;
 import com.project.pixelstore.models.Role;

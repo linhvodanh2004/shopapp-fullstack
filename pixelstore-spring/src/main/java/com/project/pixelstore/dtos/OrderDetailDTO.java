@@ -1,6 +1,11 @@
 package com.project.pixelstore.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.pixelstore.models.Option;
+import com.project.pixelstore.models.OptionValue;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
@@ -20,16 +25,16 @@ public class OrderDetailDTO {
     @Min(value = 1, message = "Product id must be greater than 0")
     private Long productId;
 
-    @Min(value = 0, message = "Quantity must be greater than or equal 0")
-    private Float price;
+    @Min(value = 0, message = "Price must be greater than or equal 0")
+    @JsonProperty("calculated_price")
+    private Float calculatedPrice;
 
     @Min(value = 1, message = "Quantity  must be greater than 0")
-    @JsonProperty("number_of_products")
-    private int numberOfProducts;
+    private int quantity;
 
-    @Min(value = 0, message = "Total money must be greater than or equal 0")
-    @JsonProperty("total_money")
-    private Float totalMoney;
+    @JsonProperty("option_id")
+    private Long option;
 
-    private String color;
+    @JsonProperty("option_value_id")
+    private Long optionValue;
 }

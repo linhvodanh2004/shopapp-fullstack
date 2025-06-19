@@ -1,5 +1,7 @@
 package com.project.pixelstore.models;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,13 +28,17 @@ public class CartDetail extends BaseEntity{
 
     private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "option_id")
-    private Option option;
+    @ManyToMany
+    @JoinTable(name = "cart_detail_options",
+        joinColumns = @JoinColumn(name = "cart_detail_id"),
+        inverseJoinColumns = @JoinColumn(name = "option_id"))
+    private Set<Option> options;
 
-    @ManyToOne
-    @JoinColumn(name = "option_value_id")
-    private OptionValue optionValue;
+    @ManyToMany
+    @JoinTable(name = "cart_detail_option_values",
+        joinColumns = @JoinColumn(name = "cart_detail_id"),
+        inverseJoinColumns = @JoinColumn(name = "option_value_id"))
+    private Set<OptionValue> optionValues;
 
     @Column(name = "calculated_price")
     private Float calculatedPrice;
